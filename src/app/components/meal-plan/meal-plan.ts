@@ -40,88 +40,69 @@ export class MealPlan implements OnInit {
     carbs: number;
     fat: number;
   }[] | null>(null);
-
   generatedTotals = signal<{
     calories: number;
     protein: number;
     carbs: number;
     fat: number;
     kcalErrorPct: number;
-          } else {
-            // Snacks: still build a 3-component mini-meal (protein, carbs, fat)
-            // For `Snack 1` enforce a fruit and a quick-carb when possible.
-            let protFood = chooseRandom(proteinRichFoods, candidateFoods);
-            let carbFallback = snackPreferredFoods.length ? snackPreferredFoods : candidateFoods;
-            let carbFood = chooseRandom(carbRichFoods, carbFallback);
-            let fatFallback = snackPreferredFoods.length ? snackPreferredFoods : candidateFoods;
-            let fatFood = chooseRandom(fatRichFoods, fatFallback);
+    proteinErrorPct?: number;
+    carbsErrorPct?: number;
+    fatErrorPct?: number;
+  } | null>(null);
 
-            const isSnack1 = slot.name === 'Snack 1';
-            if (isSnack1) {
-              const fruitTerms = ['apple', 'banana', 'pear', 'orange', 'fruit', 'frutta', 'mela', 'banana', 'pera', 'arancia', 'uva', 'fragola', 'fragole', 'kiwi', 'prugna'];
-              const quickCarbTerms = ['cracker', 'crispbread', 'cereal', 'muesli', 'cornflakes', 'toast', 'bread', 'rice cake', 'rusk', 'cracker', 'biscuit', 'bar', 'energy bar', 'wafer', 'crackers', 'biscotti'];
+  // UI / flow signals
+  generating = signal<boolean>(false);
+  saving = signal<boolean>(false);
+  generateError = signal<string | null>(null);
+  saveStatus = signal<string | null>(null);
 
-              const fruitCandidates = slotPool.filter(f => {
-                const name = (f.Food || '').toLowerCase();
-                return fruitTerms.some(t => name.includes(t));
-              });
-              const quickCarbCandidates = slotPool.filter(f => {
-                const name = (f.Food || '').toLowerCase();
-                return quickCarbTerms.some(t => name.includes(t));
-              });
-
-              if (fruitCandidates.length) {
-                // use fruit as one component (we'll place it into the prot slot to guarantee inclusion)
-                protFood = fruitCandidates[randInt(0, fruitCandidates.length - 1)];
-              }
-              if (quickCarbCandidates.length) {
-                carbFood = quickCarbCandidates[randInt(0, quickCarbCandidates.length - 1)];
-              }
-            }
-
-            // Avoid duplicates within the same slot
-            const usedIds = new Set<number>([protFood.ID]);
-            if (usedIds.has(carbFood.ID)) {
-              const alt = carbRichFoods.filter(f => !usedIds.has(f.ID));
-              if (alt.length) carbFood = alt[randInt(0, alt.length - 1)];
-            }
-            usedIds.add(carbFood.ID);
-            if (usedIds.has(fatFood.ID)) {
-              const alt = fatRichFoods.filter(f => !usedIds.has(f.ID));
-              if (alt.length) fatFood = alt[randInt(0, alt.length - 1)];
-            }
-
-            const protKcalTarget = slotKcalTarget * 0.35;
-            const carbKcalTarget = slotKcalTarget * 0.40;
-            const fatKcalTarget = slotKcalTarget * 0.25;
-
-            const addFoodPortion = (food: Food, kcalTarget: number) => {
-              let grams = Math.round((kcalTarget / food.Calories) * 100);
-              grams = Math.max(30, Math.min(400, grams));
-              grams = Math.round(grams / 5) * 5;
-
-              const factor = grams / 100;
-              const calories = food.Calories * factor;
-              const protein = food.Protein * factor;
-              const carbs = food.Carbs * factor;
-              const fat = food.Fat * factor;
-
-              plan.push({ slot: slot.name, food, grams, calories, protein, carbs, fat });
-            };
-
-            addFoodPortion(protFood, protKcalTarget);
-            addFoodPortion(carbFood, carbKcalTarget);
-            addFoodPortion(fatFood, fatKcalTarget);
-          }
-    }
-
+  // Group generated plan by slot for table rendering
+  groupedPlan = computed(() => {
+    const plan = this.generatedPlan();
+    if (!plan) return [] as { slot: string; items: any[] }[];
     return this.slotDefinitions
-      .map(def => ({
-        slot: def.name,
-        items: plan.filter(item => item.slot === def.name),
-      }))
+      .map(def => ({ slot: def.name, items: plan.filter(item => item.slot === def.name) }))
       .filter(group => group.items.length > 0);
   });
+
+  currentWeekSummary() {
+    const weeks = this.analyticsWeeks();
+    if (!weeks || !weeks.length) return null;
+    // pick the most recent week by WeekStart
+    const sorted = [...weeks].sort((a, b) => new Date(b.WeekStart).getTime() - new Date(a.WeekStart).getTime());
+    const w = sorted[0];
+    return {
+      weekNumber: w.WeekNumber,
+      weekStart: w.WeekStart,
+      targetKcal: w.TargetKcal ?? w.TargetKcal,
+      protG: w.ProtG ?? w.ProtG,
+      carbsG: w.CarbsG ?? w.CarbsG,
+      fatG: w.FatG ?? w.FatG,
+    } as any;
+  }
+
+  openFoodDetails(food: Food) {
+    this.dialog.open(FoodDetailsDialog, { data: food });
+  }
+
+  async ngOnInit(): Promise<void> {
+    try {
+      const [mealTypes, categories, analytics] = await Promise.all([
+        this.dietService.getMealTypes(),
+        this.dietService.getCategories(),
+        this.dietService.getAnalyticsWeeks(),
+      ]);
+      this.mealTypes.set(mealTypes);
+      const map: Record<string, number> = {};
+      categories.forEach(c => { if (c && c.Category) map[c.Category.toLowerCase()] = c.ID; });
+      this.categoryNameToId.set(map);
+      this.analyticsWeeks.set(analytics);
+    } catch (err) {
+      console.error('Failed to initialize meal plan', err);
+      this.analyticsError.set('Failed to load meal plan data.');
+    }
+  }
 
   async generateRandomPlan() {
     const summary = this.currentWeekSummary();
