@@ -48,3 +48,8 @@ All notable changes to My Diet App are documented here.
 
 - Removed unused backend helper scripts and data files that were not used by the web app.
 - Hardened server startup logging and error handling around database migrations.
+
+## 2026-02-18
+
+- Removed a set of standalone maintenance scripts from `scripts/` and `server/` that were not referenced by the application or by other project code; retained `start-all.bat` as the recommended local starter on Windows.
+- Updated `README.md` to remove references to the removed hook-install scripts and added guidance for local pre-push hook setup or relying on GitHub branch protection for signed commits.

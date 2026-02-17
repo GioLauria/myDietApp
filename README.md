@@ -74,16 +74,25 @@ git config --local tag.gpgSign true
 
 2. Register your public key with GitHub (https://github.com/settings/keys) so GitHub can verify signed commits.
 
-3. Optional: install a pre-push hook that verifies signatures before pushing (scripts are provided):
+3. Optional: install a pre-push hook that verifies signatures before pushing.
+
+Note: the repository's hook-install scripts were removed in a cleanup. If you want local verification, either create a `.git/hooks/pre-push` script that runs your preferred verification, or rely on GitHub branch protection to require signed commits centrally.
+
+Example minimal pre-push hook (create `.git/hooks/pre-push` and make it executable):
 
 ```bash
-# from repo root
-chmod +x scripts/install-git-hooks.sh
-./scripts/install-git-hooks.sh
+#!/bin/sh
+# Check for unsigned commits between remote HEAD and local HEAD
+git fetch origin --quiet
+git log origin/HEAD..HEAD --pretty=format:'%H %G?' | while read commit sig; do
+	if [ "$sig" = "N" ]; then
+		echo "Found unsigned commit $commit"; exit 1
+	fi
+done
 ```
 
 4. If you want to require signed commits on GitHub, enable the "Require signed commits" branch protection rule in the repository settings for the protected branch (e.g. `master`).
 
 Notes:
 - Enabling `commit.gpgsign` locally will cause `git commit` to fail if your GPG key is not available or not configured. Follow the steps above to setup GPG and register the public key with GitHub.
-- The provided hook is an optional helper; you may prefer to use GitHub branch protection rules to enforce signatures centrally.
+- If you prefer an automated installer for hooks, re-add or recreate the `scripts/install-git-hooks.sh` helper in the project root.
