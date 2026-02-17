@@ -1,0 +1,100 @@
+<div class="user-manual-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon color="warn">help_outline</mat-icon>
+        <span>My Diet App - User Manual</span>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <section>
+        <h3>1. Overview</h3>
+        <p>
+          My Diet App helps you track calories, log your weight, manage a meal plan, and
+          maintain a personal food database. Use the top menu to navigate between sections.
+        </p>
+      </section>
+
+      <section>
+        <h3>2. Main Screens</h3>
+        <h4>Analytics</h4>
+        <p>
+          Shows weekly summaries built from your weight log. Each column is a week with
+          averages for weight, body fat, lean mass, BMR, target kcal and macros. You can
+          set whether you worked out (Y/N) and choose a diet phase; the latest week is
+          highlighted and is the only one that can be edited.
+        </p>
+        <p>
+          Column width can be adjusted with the slider above the table. Your preferred
+          width is saved per user and reused next time you open Analytics.
+        </p>
+
+        <h4>Weight Log</h4>
+        <p>
+          Log your weight (and optional body fat) over time. The page shows recent
+          entries, inline editing, and gauges for weight and body composition.
+        </p>
+        <p>
+          Admin and Master users can generate sample data or delete all logs; normal
+          users do not see these admin actions. When logs are generated or deleted, the
+          analytics table is rebuilt automatically to stay in sync.
+        </p>
+
+        <h4>Meal Plan</h4>
+        <p>
+          Displays a summary of the current analytics week (target kcal and macros) and
+          the list of saved meals. You can also generate a random daily meal plan based
+          on foods from the Food DB; the generator tries to match your calorie and macro
+          targets within about 2% when possible.
+        </p>
+
+        <h4>Food DB</h4>
+        <p>
+          Browse and search foods, grouped by category. Masters/Admins can add or edit
+          foods and categories which can later be used by the meal planner.
+        </p>
+      </section>
+
+      <section>
+        <h3>3. Profile & Appearance</h3>
+        <p>
+          On the Profile page you can set your personal details, activity level, and user
+          role (if permitted). In the Appearance section you can choose:
+        </p>
+        <ul>
+          <li>Colour scheme (theme colours)</li>
+          <li>Font family (text style)</li>
+          <li>Base font size (overall text size)</li>
+        </ul>
+        <p>
+          Changes are applied immediately to the app and saved to your profile.
+        </p>
+      </section>
+
+      <section>
+        <h3>4. Admin & Advanced Tools</h3>
+        <h4>API Routes</h4>
+        <p>
+          Shows all backend endpoints grouped by area. Master/Admin users can export a
+          Postman collection for the API directly from this page.
+        </p>
+
+        <h4>DB Relationships</h4>
+        <p>
+          Visual diagram of the main database tables plus an interactive area where you
+          can drag table cards to explore relationships.
+        </p>
+
+        <h4>App Database</h4>
+        <p>
+          Admin DB console with read‑only examples and the ability for Master/Admin
+          users to run custom SELECT queries against the SQLite database.
+        </p>
+      </section>
+
+      <section *ngIf="false">
+        <!-- Reserved for future advanced/admin documentation -->
+      </section>
+    </mat-card-content>
+  </mat-card>
+</div>

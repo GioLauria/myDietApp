@@ -1,0 +1,66 @@
+.profile-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(33, 150, 243, 0.08), rgba(255, 183, 77, 0.08));
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+  h2 {
+    margin-bottom: 20px;
+    color: var(--app-primary);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    padding-bottom: 10px;
+  }
+
+  .role-warning {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    
+    &.master-warning {
+      background-color: #ffebee;
+      color: #c62828;
+      border: 1px solid #ef9a9a;
+    }
+
+    &.admin-warning {
+      background-color: #fff3e0;
+      color: #ef6c00;
+      border: 1px solid #ffcc80;
+    }
+  }
+
+  .profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .form-row {
+      display: flex;
+      gap: 16px;
+      
+      mat-form-field {
+        flex: 1;
+      }
+
+      @media (max-width: 600px) {
+        flex-direction: column;
+        gap: 0;
+      }
+    }
+
+    .full-width {
+      width: 100%;
+    }
+
+    .form-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+}

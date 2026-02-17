@@ -1,0 +1,28 @@
+.user-manual-container {
+  max-width: 800px;
+  margin: 0 auto;
+
+  mat-card {
+    border-radius: 12px;
+  }
+
+  mat-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  section {
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+
+  h4 {
+    margin-top: 8px;
+    margin-bottom: 2px;
+  }
+}

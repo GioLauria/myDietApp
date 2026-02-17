@@ -1,0 +1,317 @@
+  .analytics-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .profile-card {
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(25, 118, 210, 0.08), rgba(56, 142, 60, 0.08));
+  }
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px 24px;
+    margin-top: 12px;
+  }
+
+  .profile-item .label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #607d8b;
+    margin-bottom: 2px;
+  }
+
+  .profile-item .value {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #263238;
+  }
+
+  .error-message {
+    padding: 8px 12px;
+    border-radius: 4px;
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+    font-size: 0.9rem;
+  }
+
+  .weekly-card {
+    padding: 16px;
+  }
+
+  .weekly-matrix {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-size-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .table-size-control .size-label {
+    font-size: 0.8rem;
+    color: #607d8b;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .matrix-header,
+  .matrix-row {
+	  display: flex;
+	  flex-wrap: nowrap;
+  }
+
+  .matrix-header {
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 6px;
+  }
+
+  .matrix-cell {
+    padding: 4px 6px;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #f0f0f0;
+    white-space: nowrap;
+    text-align: left;
+    display: flex;
+    align-items: center;
+  }
+
+  /* First column = labels, fixed; week columns have a minimum so the
+     total width can exceed the card and trigger horizontal scrolling. */
+  .label-cell {
+    flex: 0 0 160px;
+  }
+
+  .matrix-row .matrix-cell:not(.label-cell),
+  .matrix-header .matrix-cell:not(.label-cell) {
+    flex: 0 0 var(--week-column-width, 110px);
+  }
+
+  .matrix-row .matrix-cell:not(.label-cell) > .cell-text,
+  .matrix-row .matrix-cell:not(.label-cell) > .workout-field,
+  .matrix-row .matrix-cell:not(.label-cell) > .phase-field {
+    flex: 1 1 auto;
+  }
+
+  .label-cell {
+    font-weight: 600;
+    color: #37474f;
+    background-color: #f5f5f5;
+  }
+
+  .week-header-cell {
+    text-align: left;
+    background-color: #fafafa;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .week-title {
+    font-weight: 600;
+  }
+
+  .week-meta {
+    font-size: 0.75rem;
+    color: #757575;
+  }
+
+  .matrix-row:nth-child(odd) .matrix-cell:not(.label-cell) {
+    background-color: #fafafa;
+  }
+
+  .phase-field {
+    width: auto;
+    max-width: none;
+    display: inline-flex;
+    margin: 0;
+    .mat-mdc-form-field-infix {
+      min-width: 0;
+    }
+    /* Remove visible outline/border for compact look */
+    .mat-mdc-form-field-outline,
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+    .mat-mdc-select-trigger {
+      font-size: 0.75rem;
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+    /* Hide dropdown arrow icon */
+    .mat-mdc-select-arrow-wrapper,
+    .mat-mdc-select-arrow {
+      display: none;
+    }
+  }
+
+  .workout-field {
+    width: auto;
+    max-width: none;
+    display: inline-flex;
+    margin: 0;
+    .mat-mdc-form-field-infix {
+      min-width: 0;
+    }
+    /* Remove visible outline/border for compact look */
+    .mat-mdc-form-field-outline,
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+    .mat-mdc-select-trigger {
+      font-size: 0.75rem;
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+    /* Hide dropdown arrow icon */
+    .mat-mdc-select-arrow-wrapper,
+    .mat-mdc-select-arrow {
+      display: none;
+    }
+  }
+
+  .phase-config {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    color: #37474f;
+  }
+
+  .phase-config summary {
+    cursor: pointer;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .phase-config-table {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(120px, 1fr));
+    gap: 4px 12px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    background-color: #fafafa;
+    border: 1px solid #e0e0e0;
+  }
+
+  .phase-row {
+    display: contents;
+  }
+
+  .phase-row > div {
+    padding: 2px 0;
+  }
+
+  .phase-header > div {
+    font-weight: 600;
+    color: #455a64;
+  }
+
+  .phase-number-field {
+    width: 100%;
+  }
+
+  .phase-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .phase-status {
+    font-size: 0.8rem;
+    color: #455a64;
+  }
+
+  .empty-message {
+    font-size: 0.9rem;
+    color: #757575;
+  }
+
+  /* Highlight latest week workout/phase as bold red */
+  .matrix-row .matrix-cell.current-week {
+    font-weight: 700;
+    color: #d32f2f;
+  }
+
+  :host ::ng-deep .matrix-row .matrix-cell.current-week .mat-mdc-select-value-text {
+    font-weight: 700;
+    color: #d32f2f;
+  }
+
+  /* Hide Material select chrome (border + arrow) for compact workout/phase controls */
+  :host ::ng-deep .workout-field .mat-mdc-text-field-wrapper,
+  :host ::ng-deep .phase-field .mat-mdc-text-field-wrapper {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  :host ::ng-deep .workout-field .mat-mdc-form-field-outline,
+  :host ::ng-deep .phase-field .mat-mdc-form-field-outline,
+  :host ::ng-deep .workout-field .mdc-notched-outline,
+  :host ::ng-deep .phase-field .mdc-notched-outline {
+    display: none !important;
+  }
+
+  :host ::ng-deep .workout-field .mat-mdc-select-arrow-wrapper,
+  :host ::ng-deep .phase-field .mat-mdc-select-arrow-wrapper,
+  :host ::ng-deep .workout-field .mat-mdc-select-arrow,
+  :host ::ng-deep .phase-field .mat-mdc-select-arrow {
+    display: none !important;
+  }
+
+  /* Slimmer dropdowns for the current editable column */
+  :host ::ng-deep .slim-select .mat-mdc-select-trigger {
+    padding: 0 1px !important;
+    min-height: 0 !important;
+    height: 12px !important;
+  }
+
+  :host ::ng-deep .slim-select .mat-mdc-select-value-text {
+    line-height: 12px !important;
+    font-size: 0.7rem;
+  }
+
+  :host ::ng-deep .slim-select .mat-mdc-form-field-flex {
+    min-height: 0 !important;
+    height: 12px !important;
+    padding: 0 !important;
+  }
+
+  :host ::ng-deep .slim-select .mat-mdc-text-field-wrapper {
+    min-height: 0 !important;
+    height: 12px !important;
+  }
+
+  :host ::ng-deep .slim-select .mat-mdc-form-field-infix {
+    padding: 0 !important;
+    min-height: 0 !important;
+    height: 12px !important;
+    border-top: 0 !important;
+  }
+
+  :host ::ng-deep .slim-select .mat-mdc-select-value {
+    padding: 0 !important;
+  }
+
+  /* Let dropdown width fit its content */
+  :host ::ng-deep .slim-select.mat-mdc-form-field {
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  /* For data columns (not the label column), keep workout/phase same width as Weight */
+  .weekly-matrix .matrix-row .matrix-cell:not(.label-cell) .workout-field,
+  .weekly-matrix .matrix-row .matrix-cell:not(.label-cell) .phase-field {
+    width: 100%;
+    max-width: 100%;
+  }

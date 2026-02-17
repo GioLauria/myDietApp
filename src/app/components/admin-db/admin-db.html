@@ -1,0 +1,104 @@
+<div class="admin-db-container">
+  <h2>App Database Client</h2>
+  
+  <div class="warning-banner">
+    <mat-icon>warning</mat-icon>
+    <span>WARNING: You are in Master Mode. You have full access to alter the database. Proceed with caution.</span>
+  </div>
+
+  <mat-card class="query-card">
+    <mat-card-content>
+      <div class="controls">
+        <mat-form-field appearance="outline">
+          <mat-label>Select Table</mat-label>
+          <mat-select [value]="selectedTable()" (selectionChange)="onTableSelect($event.value)">
+            <mat-option *ngFor="let table of tables()" [value]="table">
+              {{ table }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="query-input">
+        <mat-label>SQL Query</mat-label>
+        <textarea matInput [(ngModel)]="query" rows="5" placeholder="SELECT * FROM ..." (keydown)="onKeydown($event)"></textarea>
+        <mat-hint>Press Ctrl+Enter to execute</mat-hint>
+      </mat-form-field>
+
+      <div class="actions">
+        <button mat-raised-button color="primary" (click)="executeQuery()">
+          <mat-icon>play_arrow</mat-icon> Execute Query
+        </button>
+      </div>
+
+      <div class="messages">
+        <div class="error" *ngIf="error()">{{ error() }}</div>
+        <div class="success" *ngIf="successMessage()">{{ successMessage() }}</div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-accordion class="help-accordion">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>help_outline</mat-icon> &nbsp; SQL Examples
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      
+      <div class="example-list">
+          <p><strong>Update a food record (including MealId):</strong><br>
+          <code>UPDATE tblFood SET Calories = 100, MealId = (SELECT ID FROM tblMealType WHERE Meal = 'Lunch') WHERE ID = 1;</code></p>
+        
+          <p><strong>Delete a food record:</strong><br>
+          <code>DELETE FROM tblFood WHERE ID = 5;</code></p>
+        
+          <p><strong>Insert a food record (specifying MealId):</strong><br>
+          <code>INSERT INTO tblFood (Food, Protein, Carbs, Fat, Calories, ID_Category, MealId, created_by)
+        VALUES ('Example Food', 10, 20, 5, 200, 1, (SELECT ID FROM tblMealType WHERE Meal = 'Dinner'), 1);</code></p>
+
+          <p><strong>Select foods for a specific meal:</strong><br>
+          <code>SELECT f.ID, f.Food, f.Calories, f.Protein, f.Carbs, f.Fat, m.Meal FROM tblFood f JOIN tblMealType m ON f.MealId = m.ID WHERE m.Meal = 'Breakfast' ORDER BY f.Food;</code></p>
+        
+        <p><strong>Alter Table (Add Column):</strong><br>
+        <code>ALTER TABLE tblProfile ADD COLUMN Phone TEXT;</code></p>
+
+    <p><strong>Analytics per week (read):</strong><br>
+    <code>SELECT * FROM tblAnalytics ORDER BY WeekStart DESC;</code></p>
+
+    <p><strong>Analytics per week (insert):</strong><br>
+    <code>INSERT INTO tblAnalytics (profile_id, WeekStart, WeekNumber, Workout, PhaseKey)
+  VALUES (1, '2025-01-01', 1, 'Y', 1); -- PhaseKey stores tblDietPhase.ID</code></p>
+
+    <p><strong>Analytics with phase details:</strong><br>
+    <code>SELECT a.WeekStart, a.WeekNumber, a.Workout, a.PhaseKey AS PhaseId,
+       d.PhaseKey, d.ProteinPerKgLean, d.FatPerKgBody, d.CalorieOffset
+  FROM tblAnalytics a
+  JOIN tblDietPhase d ON a.PhaseKey = d.ID;</code></p>
+
+     <p><strong>Saved meal plans (latest first):</strong><br>
+     <code>SELECT mp.ID, mp.PlanDate,
+       ms.Name AS Slot, f.Food AS FoodName
+    FROM tblMealPlan mp
+    JOIN tblMealSlot ms ON mp.SlotID = ms.ID
+    JOIN tblFood f ON mp.FoodID = f.ID
+    ORDER BY mp.PlanDate DESC, mp.ID;</code></p>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <div class="results-container" *ngIf="queryResult().length > 0">
+    <h3>Results</h3>
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="queryResult()" class="mat-elevation-z8">
+        <ng-container *ngFor="let col of queryColumns()" [matColumnDef]="col">
+          <th mat-header-cell *matHeaderCellDef> {{ col }} </th>
+          <td mat-cell *matCellDef="let element"> {{ element[col] }} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="queryColumns()"></tr>
+        <tr mat-row *matRowDef="let row; columns: queryColumns();"></tr>
+      </table>
+    </div>
+  </div>
+</div>

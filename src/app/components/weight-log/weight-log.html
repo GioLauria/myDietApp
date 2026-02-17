@@ -1,0 +1,298 @@
+<div class="weight-log-container">
+	<h2>Weight Log</h2>
+
+	<div *ngIf="error()" class="error-message">{{ error() }}</div>
+
+	<mat-card class="log-form-card">
+		<h3>New Entry</h3>
+		<form [formGroup]="logForm" (ngSubmit)="addEntry()" class="log-form">
+			<mat-form-field appearance="outline">
+				<mat-label>Date</mat-label>
+				<input matInput [matDatepicker]="picker" formControlName="date">
+				<mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+				<mat-datepicker #picker></mat-datepicker>
+			</mat-form-field>
+
+			<mat-form-field appearance="outline">
+				<mat-label>Weight (kg)</mat-label>
+				<input matInput type="number" formControlName="weight" step="0.1">
+			</mat-form-field>
+
+			<mat-form-field appearance="outline">
+				<mat-label>Body Fat (%)</mat-label>
+				<input matInput type="number" formControlName="bodyFat" step="0.1">
+			</mat-form-field>
+
+			<button mat-raised-button color="primary" type="submit">Add Entry</button>
+			<button mat-stroked-button color="accent" type="button" *ngIf="canManageLogs()" (click)="generateSampleData()">
+				<mat-icon class="admin-action-icon">admin_panel_settings</mat-icon>
+				Generate Sample Data
+			</button>
+			<button mat-stroked-button color="warn" type="button" *ngIf="canManageLogs()" (click)="deleteAllEntries()">
+				<mat-icon class="admin-action-icon">admin_panel_settings</mat-icon>
+				Delete All Logs
+			</button>
+			<div class="admin-note" *ngIf="canManageLogs()">
+				Admin/Master only actions
+			</div>
+		</form>
+	</mat-card>
+
+	<mat-card class="stats-card" *ngIf="enrichedEntries().length && latestEntry() as latest">
+		<h3>Latest Summary</h3>
+		<div class="dial-grid">
+			<div class="dial dial--weight" [ngClass]="dialHealthClass('weight')">
+				<div class="dial-header">
+					<mat-icon class="dial-icon">monitor_weight</mat-icon>
+					<span class="dial-label">Weight</span>
+				</div>
+				<div class="gauge" [style.--angle-deg]="gaugeAngle('weight', latest.Weight) + 'deg'">
+					<div class="gauge-arc"></div>
+					<div class="gauge-needle"></div>
+					<div class="gauge-center"></div>
+				</div>
+				<div class="gauge-scale">
+					<span class="gauge-min">
+						{{ seriesMin('weight') != null ? (seriesMin('weight') | number:'1.1-1') : '-' }}
+					</span>
+					<span class="gauge-max">
+						{{ seriesMax('weight') != null ? (seriesMax('weight') | number:'1.1-1') : '-' }}
+					</span>
+				</div>
+				<div class="dial-reading">
+					<span class="dial-value">{{ latest.Weight | number:'1.1-1' }}</span>
+					<span class="dial-unit">kg</span>
+				</div>
+			</div>
+
+			<div
+				class="dial dial--bodyfat"
+				[ngClass]="dialHealthClass('bodyFat')"
+				[style.--bf-stop-1]="bodyFatStops().stop1 + '%'"
+				[style.--bf-stop-2]="bodyFatStops().stop2 + '%'"
+				[style.--bf-stop-3]="bodyFatStops().stop3 + '%'"
+			>
+				<div class="dial-header">
+					<mat-icon class="dial-icon">favorite</mat-icon>
+					<span class="dial-label">Body Fat</span>
+				</div>
+				<div class="gauge" [style.--angle-deg]="gaugeAngle('bodyFat', latest.BodyFat) + 'deg'">
+					<div class="gauge-arc"></div>
+					<div class="gauge-needle"></div>
+					<div class="gauge-center"></div>
+				</div>
+				<div class="gauge-scale">
+					<span class="gauge-min">
+						{{ seriesMin('bodyFat') != null ? (seriesMin('bodyFat') | number:'1.1-1') + '%' : '-' }}
+					</span>
+					<span class="gauge-max">
+						{{ seriesMax('bodyFat') != null ? (seriesMax('bodyFat') | number:'1.1-1') + '%' : '-' }}
+					</span>
+				</div>
+				<div class="dial-reading">
+					<span class="dial-value">{{ latest.BodyFat != null ? (latest.BodyFat | number:'1.1-1') : '-' }}</span>
+					<span class="dial-unit">%</span>
+				</div>
+			</div>
+
+			<div
+				class="dial dial--lean"
+				[ngClass]="dialHealthClass('lean')"
+				[style.--lean-stop-1]="leanStops().stop1 + '%'"
+				[style.--lean-stop-2]="leanStops().stop2 + '%'"
+				[style.--lean-stop-3]="leanStops().stop3 + '%'"
+			>
+				<div class="dial-header">
+					<mat-icon class="dial-icon">fitness_center</mat-icon>
+					<span class="dial-label">Lean Mass</span>
+				</div>
+				<div class="gauge" [style.--angle-deg]="gaugeAngle('lean', latest.LeanMass) + 'deg'">
+					<div class="gauge-arc"></div>
+					<div class="gauge-needle"></div>
+					<div class="gauge-center"></div>
+				</div>
+				<div class="gauge-scale">
+					<span class="gauge-min">
+						{{ seriesMin('lean') != null ? (seriesMin('lean') | number:'1.1-1') : '-' }}
+					</span>
+					<span class="gauge-max">
+						{{ seriesMax('lean') != null ? (seriesMax('lean') | number:'1.1-1') : '-' }}
+					</span>
+				</div>
+				<div class="dial-reading">
+					<span class="dial-value">{{ latest.LeanMass != null ? (latest.LeanMass | number:'1.1-1') : '-' }}</span>
+					<span class="dial-unit">kg</span>
+				</div>
+			</div>
+
+			<div
+				class="dial dial--fat"
+				[ngClass]="dialHealthClass('fat')"
+				[style.--fat-stop-1]="fatStops().stop1 + '%'"
+				[style.--fat-stop-2]="fatStops().stop2 + '%'"
+				[style.--fat-stop-3]="fatStops().stop3 + '%'"
+			>
+				<div class="dial-header">
+					<mat-icon class="dial-icon">opacity</mat-icon>
+					<span class="dial-label">Fat Mass</span>
+				</div>
+				<div class="gauge" [style.--angle-deg]="gaugeAngle('fat', latest.fatMass) + 'deg'">
+					<div class="gauge-arc"></div>
+					<div class="gauge-needle"></div>
+					<div class="gauge-center"></div>
+				</div>
+				<div class="gauge-scale">
+					<span class="gauge-min">
+						{{ seriesMin('fat') != null ? (seriesMin('fat') | number:'1.1-1') : '-' }}
+					</span>
+					<span class="gauge-max">
+						{{ seriesMax('fat') != null ? (seriesMax('fat') | number:'1.1-1') : '-' }}
+					</span>
+				</div>
+				<div class="dial-reading">
+					<span class="dial-value">{{ latest.fatMass != null ? (latest.fatMass | number:'1.1-1') : '-' }}</span>
+					<span class="dial-unit">kg</span>
+				</div>
+			</div>
+		</div>
+	</mat-card>
+
+	<mat-card class="entries-card" *ngIf="enrichedEntries().length">
+		<h3>Entries (Last {{ stats()?.days }} Days)</h3>
+		<table mat-table [dataSource]="enrichedEntries()" class="entries-table">
+			<ng-container matColumnDef="date">
+				<th mat-header-cell *matHeaderCellDef>Date</th>
+				<td mat-cell *matCellDef="let e">{{ e.EntryDate | date:'yyyy-MM-dd HH:mm' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="weight">
+				<th mat-header-cell *matHeaderCellDef>Weight (kg)</th>
+				<td mat-cell *matCellDef="let e">{{ e.Weight | number:'1.1-1' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="bodyFat">
+				<th mat-header-cell *matHeaderCellDef>Body Fat (%)</th>
+				<td mat-cell *matCellDef="let e">{{ e.BodyFat != null ? (e.BodyFat | number:'1.1-1') : '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="leanMass">
+				<th mat-header-cell *matHeaderCellDef>Lean Mass (kg)</th>
+				<td mat-cell *matCellDef="let e">{{ e.LeanMass != null ? (e.LeanMass | number:'1.1-1') : '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="leanDelta">
+				<th mat-header-cell *matHeaderCellDef>Lean Δ since first (kg)</th>
+				<td mat-cell *matCellDef="let e" [ngClass]="{
+					'lean-positive': e.leanDelta > 0,
+					'lean-negative': e.leanDelta < 0
+				}">
+					{{ e.leanDelta != null ? (e.leanDelta | number:'1.1-1') : '-' }}
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="fatMass">
+				<th mat-header-cell *matHeaderCellDef>Fat Mass (kg)</th>
+				<td mat-cell *matCellDef="let e">{{ e.fatMass != null ? (e.fatMass | number:'1.1-1') : '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="fatDelta">
+				<th mat-header-cell *matHeaderCellDef>Fat Δ since first (kg)</th>
+				<td mat-cell *matCellDef="let e" [ngClass]="{
+					'fat-positive': e.fatDelta > 0,
+					'fat-negative': e.fatDelta < 0
+				}">
+					{{ e.fatDelta != null ? (e.fatDelta | number:'1.1-1') : '-' }}
+				</td>
+			</ng-container>
+
+			<ng-container matColumnDef="bmi">
+				<th mat-header-cell *matHeaderCellDef>BMI</th>
+				<td mat-cell *matCellDef="let e">{{ e.bmi != null ? (e.bmi | number:'1.1-1') : '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="avgWeight7">
+				<th mat-header-cell *matHeaderCellDef>Avg Weight last 7d (kg)</th>
+				<td mat-cell *matCellDef="let e">{{ e.avgWeight7 != null ? (e.avgWeight7 | number:'1.1-1') : '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="diffPrevWeek">
+				<th mat-header-cell *matHeaderCellDef>Diff vs prev week (kg)</th>
+				<td mat-cell *matCellDef="let e">{{ e.diffPrevWeek != null ? (e.diffPrevWeek | number:'1.1-1') : '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="bfAvg">
+				<th mat-header-cell *matHeaderCellDef>BF% average</th>
+				<td mat-cell *matCellDef="let e">{{ e.bfAvg != null ? (e.bfAvg | number:'1.1-1') + '%' : '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="bmiAvg">
+				<th mat-header-cell *matHeaderCellDef>BMI average</th>
+				<td mat-cell *matCellDef="let e">{{ e.bmiAvg != null ? (e.bmiAvg | number:'1.1-1') : '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="leanAvg">
+				<th mat-header-cell *matHeaderCellDef>Lean average (kg)</th>
+				<td mat-cell *matCellDef="let e">{{ e.leanAvg != null ? (e.leanAvg | number:'1.1-1') : '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="leanDeltaAvg">
+				<th mat-header-cell *matHeaderCellDef>Lean Δ avg (kg)</th>
+				<td mat-cell *matCellDef="let e">{{ e.leanDeltaAvg != null ? (e.leanDeltaAvg | number:'1.1-1') : '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="fatAvg">
+				<th mat-header-cell *matHeaderCellDef>Fat average (kg)</th>
+				<td mat-cell *matCellDef="let e">{{ e.fatAvg != null ? (e.fatAvg | number:'1.1-1') : '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="fatDeltaAvg">
+				<th mat-header-cell *matHeaderCellDef>Fat Δ avg (kg)</th>
+				<td mat-cell *matCellDef="let e">{{ e.fatDeltaAvg != null ? (e.fatDeltaAvg | number:'1.1-1') : '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="ffmi">
+				<th mat-header-cell *matHeaderCellDef>FFMI</th>
+				<td mat-cell *matCellDef="let e">{{ e.ffmi != null ? (e.ffmi | number:'1.1-1') : '-' }}</td>
+			</ng-container>
+
+			<ng-container matColumnDef="actions">
+				<th mat-header-cell *matHeaderCellDef>Actions</th>
+				<td mat-cell *matCellDef="let e">
+					<ng-container *ngIf="editingId() === e.ID; else viewActions">
+						<input
+							type="number"
+							step="0.1"
+							class="inline-input"
+							[ngModel]="editWeight()"
+							(ngModelChange)="editWeight.set($event)"
+						/>
+						<input
+							type="number"
+							step="0.1"
+							class="inline-input"
+							[ngModel]="editBodyFat()"
+							(ngModelChange)="editBodyFat.set($event)"
+						/>
+						<button mat-icon-button color="primary" (click)="saveEdit(e)" aria-label="Save">
+							<mat-icon>check</mat-icon>
+						</button>
+						<button mat-icon-button (click)="cancelEdit()" aria-label="Cancel">
+							<mat-icon>close</mat-icon>
+						</button>
+					</ng-container>
+					<ng-template #viewActions>
+						<button mat-icon-button color="primary" (click)="startEdit(e)" aria-label="Edit">
+							<mat-icon>edit</mat-icon>
+						</button>
+						<button mat-icon-button color="warn" (click)="deleteEntry(e)" aria-label="Delete">
+							<mat-icon>delete</mat-icon>
+						</button>
+					</ng-template>
+				</td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		</table>
+	</mat-card>
+</div>

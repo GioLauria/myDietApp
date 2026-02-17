@@ -1,0 +1,266 @@
+<div class="analytics-container">
+  <mat-card class="profile-card" *ngIf="profile() as p">
+    <h2>Analytics</h2>
+    <div class="profile-grid">
+      <div class="profile-item">
+        <div class="label">Height</div>
+        <div class="value">{{ p.Height }} cm</div>
+      </div>
+      <div class="profile-item">
+        <div class="label">Activity level</div>
+        <div class="value">{{ activityLabel() }}</div>
+      </div>
+      <div class="profile-item">
+        <div class="label">Age</div>
+        <div class="value">{{ ageYears() | number:'1.1-1' }} years</div>
+      </div>
+      <div class="profile-item">
+        <div class="label">Sex</div>
+        <div class="value">{{ p.Sex }}</div>
+      </div>
+    </div>
+  </mat-card>
+
+  <div *ngIf="error()" class="error-message">{{ error() }}</div>
+
+  <mat-card class="weekly-card" *ngIf="weeklyRows().length">
+    <h3>Weekly Summary</h3>
+    <div class="table-size-control">
+      <span class="size-label">Table width</span>
+      <input
+        type="range"
+        min="80"
+        max="200"
+        step="5"
+        [value]="weekColumnWidth()"
+        (input)="onTableSizeChange($any($event.target).value)"
+      />
+    </div>
+
+    <div class="weekly-matrix" [style.--week-column-width.px]="weekColumnWidth()">
+      <div class="matrix-header">
+        <div class="matrix-cell label-cell"></div>
+        <div class="matrix-cell week-header-cell" *ngFor="let row of displayWeeks()">
+          <div class="week-title">Week {{ row.weekNumber }}</div>
+          <div class="week-meta">{{ row.startDate }}</div>
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">Workout (Y/N)</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()" [ngClass]="{ 'current-week': canEditWeek(row) }">
+          <ng-container *ngIf="canEditWeek(row); else readonlyWorkout">
+            <mat-form-field appearance="outline" class="workout-field slim-select">
+              <mat-select [value]="row.workout" (selectionChange)="onWorkoutChange(row, $event.value)">
+                <mat-option value="Y">Y</mat-option>
+                <mat-option value="N">N</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+          <ng-template #readonlyWorkout>
+            <span class="cell-text">{{ row.workout }}</span>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">Weight (avg kg)</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.avgWeight != null ? (row.avgWeight | number:'1.1-1') : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">% BF (avg)</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.avgBodyFat != null ? (row.avgBodyFat | number:'1.1-1') + '%' : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">Fat mass (kg)</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.fatMass != null ? (row.fatMass | number:'1.1-1') : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">Lean mass (kg)</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.leanMass != null ? (row.leanMass | number:'1.1-1') : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">BMR rest</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.bmrRest != null ? (row.bmrRest | number:'1.0-0') : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">BMR motion</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.bmrMotion != null ? (row.bmrMotion | number:'1.0-0') : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">Offset</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.offset != null ? (row.offset | number:'1.0-0') : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">Actual kcal</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.targetKcal != null ? (row.targetKcal | number:'1.0-0') : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">Phase</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()" [ngClass]="{ 'current-week': canEditWeek(row) }">
+          <ng-container *ngIf="canEditWeek(row); else readonlyPhase">
+            <mat-form-field appearance="outline" class="phase-field slim-select">
+              <mat-select [value]="row.phase" (selectionChange)="onPhaseChange(row, $event.value)">
+                <mat-option *ngFor="let phase of phaseOptions" [value]="phase.key">
+                  {{ phase.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+          <ng-template #readonlyPhase>
+            <span class="cell-text">{{ phaseLabel(row.phase) }}</span>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">Prot (g)</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.protG != null ? (row.protG | number:'1.0-0') : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">Carbs (g)</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.carbsG != null ? (row.carbsG | number:'1.0-0') : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">Fat (g)</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.fatG != null ? (row.fatG | number:'1.0-0') : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">Cal prot</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.calProt != null ? (row.calProt | number:'1.0-0') : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">Cal carbs</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.calCarbs != null ? (row.calCarbs | number:'1.0-0') : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">Cal fat</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.calFat != null ? (row.calFat | number:'1.0-0') : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">% prot</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.percProt != null ? (row.percProt | number:'1.0-0') + '%' : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">% carbs</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.percCarbs != null ? (row.percCarbs | number:'1.0-0') + '%' : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">% fat</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.percFat != null ? (row.percFat | number:'1.0-0') + '%' : '-' }}
+        </div>
+      </div>
+
+      <div class="matrix-row">
+        <div class="matrix-cell label-cell">FFMI</div>
+        <div class="matrix-cell" *ngFor="let row of displayWeeks()">
+          {{ row.ffmi != null ? (row.ffmi | number:'1.1-1') : '-' }}
+        </div>
+      </div>
+    </div>
+  </mat-card>
+
+  <details class="phase-config" *ngIf="phaseConfigList.length">
+    <summary>Diet phase configuration</summary>
+    <div class="phase-config-table">
+      <div class="phase-row phase-header">
+        <div>Phase</div>
+        <div>Prot (g / kg lean)</div>
+        <div>Fat (g / kg body)</div>
+        <div>Offset (kcal)</div>
+      </div>
+      <div class="phase-row" *ngFor="let phase of phaseConfigList()">
+        <div>{{ phase.label }}</div>
+        <div>
+          <mat-form-field appearance="outline" class="phase-number-field">
+            <input
+              matInput
+              type="number"
+              [value]="phase.config.proteinPerKgLean"
+              (input)="onPhaseConfigNumberChange(phase.key, 'ProteinPerKgLean', $any($event.target).value)"
+            />
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="outline" class="phase-number-field">
+            <input
+              matInput
+              type="number"
+              [value]="phase.config.fatPerKgBody"
+              (input)="onPhaseConfigNumberChange(phase.key, 'FatPerKgBody', $any($event.target).value)"
+            />
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="outline" class="phase-number-field">
+            <input
+              matInput
+              type="number"
+              [value]="phase.config.calorieOffset"
+              (input)="onPhaseConfigNumberChange(phase.key, 'CalorieOffset', $any($event.target).value)"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="phase-actions">
+        <button mat-raised-button color="primary" (click)="saveDietPhaseConfig()" [disabled]="savingDietPhases()">
+          Save configuration
+        </button>
+        <span class="phase-status" *ngIf="dietPhaseSaveStatus()">{{ dietPhaseSaveStatus() }}</span>
+      </div>
+    </div>
+  </details>
+
+  <div *ngIf="!weeklyRows().length && !loading() && !error()" class="empty-message">
+    No weight log data available yet.
+  </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="dashboard-container">
+  <mat-card class="summary-card">
+    <mat-card-header>
+      <mat-card-title>Daily Summary</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="stats">
+        <div class="stat-item">
+          <h3>{{ totalCalories() }}</h3>
+          <p>Consumed</p>
+        </div>
+        <div class="stat-item">
+          <h3>{{ dailyGoal }}</h3>
+          <p>Goal</p>
+        </div>
+        <div class="stat-item">
+          <h3>{{ dailyGoal - totalCalories() }}</h3>
+          <p>Remaining</p>
+        </div>
+      </div>
+      <mat-progress-bar mode="determinate" [value]="progress()"></mat-progress-bar>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Recent meals section removed now that tblMeal is gone -->
+</div>

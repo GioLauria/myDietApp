@@ -1,0 +1,70 @@
+<div class="app-shell">
+  <mat-toolbar color="primary" class="app-toolbar">
+    <div class="toolbar-left">
+      <a routerLink="/analytics" class="app-title logo-link" title="Analytics">{{ title() }}</a>
+
+      <nav class="main-nav">
+        <button mat-button routerLink="/analytics" routerLinkActive="active-link">
+          <mat-icon>analytics</mat-icon>
+          <span>Analytics</span>
+        </button>
+        <button mat-button routerLink="/weight-log" routerLinkActive="active-link">
+          <mat-icon>monitor_weight</mat-icon>
+          <span>Weight Log</span>
+        </button>
+        <button mat-button routerLink="/meal-plan" routerLinkActive="active-link">
+          <mat-icon>restaurant_menu</mat-icon>
+          <span>Meal Plan</span>
+        </button>
+        <button mat-button routerLink="/food-db" routerLinkActive="active-link">
+          <mat-icon>library_books</mat-icon>
+          <span>Food DB</span>
+        </button>
+      </nav>
+    </div>
+    <span class="spacer"></span>
+
+    <nav class="admin-nav" *ngIf="userRole().toLowerCase() === 'master'">
+      <button mat-button routerLink="/api-routes" routerLinkActive="active-link">
+        <mat-icon>api</mat-icon>
+        <span>API Routes</span>
+      </button>
+      <button mat-button routerLink="/db-relationships" routerLinkActive="active-link">
+        <mat-icon>schema</mat-icon>
+        <span>DB Relationships</span>
+      </button>
+      <button mat-button routerLink="/admin-db" routerLinkActive="active-link">
+        <mat-icon>storage</mat-icon>
+        <span>App Database</span>
+      </button>
+    </nav>
+
+    <div class="user-section" *ngIf="userName()">
+      <button mat-icon-button class="help-icon" routerLink="/help" matTooltip="User manual">
+        <mat-icon>help_outline</mat-icon>
+      </button>
+      <button mat-icon-button class="help-icon" routerLink="/changelog" matTooltip="Changelog">
+        <mat-icon>history</mat-icon>
+      </button>
+
+      <div class="user-info">
+        <span class="user-name">{{ userName() }}</span>
+        <span class="user-role" *ngIf="userRole()">({{ userRole() }})</span>
+      </div>
+
+      <button mat-icon-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item routerLink="/profile">
+          <mat-icon>person</mat-icon>
+          <span>Profile</span>
+        </button>
+      </mat-menu>
+    </div>
+  </mat-toolbar>
+
+  <div class="app-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

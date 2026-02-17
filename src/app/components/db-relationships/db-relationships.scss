@@ -1,0 +1,137 @@
+.relationships-container {
+  padding: 20px;
+
+  h2 {
+    margin: 0 0 4px 0;
+  }
+
+  .subtitle {
+    margin: 0 0 16px 0;
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .schema-card {
+    padding: 8px 12px;
+  }
+
+  .diagram-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 12px;
+  }
+
+  .er-diagram {
+    width: 100%;
+    max-height: 360px;
+  }
+
+  .er-diagram text {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .box-body {
+    fill: #fff9c4;
+    stroke: #fbc02d;
+    stroke-width: 1.5;
+  }
+
+  .box-header {
+    fill: #fdd835;
+    stroke: #fbc02d;
+    stroke-width: 1.5;
+  }
+
+  .box-title {
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .box-field {
+    font-size: 11px;
+  }
+
+  .box-field.primary {
+    font-weight: 700;
+  }
+
+  .connector {
+    stroke: #555;
+    stroke-width: 1.2;
+    fill: none;
+  }
+
+  .connector-arrow {
+    fill: #555;
+  }
+
+  .connector-label {
+    font-size: 10px;
+    fill: #37474f;
+  }
+}
+
+.interactive-layout {
+  margin-top: 16px;
+}
+
+.interactive-layout h3 {
+  margin: 0 0 4px 0;
+}
+
+.interactive-layout .interactive-hint {
+  margin: 0 0 8px 0;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.tables-board {
+  position: relative;
+  min-height: 420px;
+  border-radius: 8px;
+  background: #fafafa;
+  border: 1px dashed #ccc;
+  padding: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: space-between;
+}
+
+.table-card {
+  position: relative;
+  min-width: 200px;
+  max-width: 240px;
+  margin: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  cursor: move;
+}
+
+.table-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.table-column {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+}
+
+.col-name.pk {
+  font-weight: 700;
+}
+
+.col-name.fk {
+  font-style: italic;
+}
+
+.col-type {
+  color: #666;
+  margin-left: 4px;
+}

@@ -1,0 +1,97 @@
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--app-primary) 0%, var(--app-accent) 40%, #26c6da 100%);
+}
+
+.app-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.app-title {
+  font-size: 1.4rem;
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.main-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.main-nav button {
+  font-size: 0.9rem;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.help-icon {
+  color: #424242;
+  transition: color 0.12s ease-in-out;
+
+  &:hover {
+    color: #212121;
+  }
+}
+
+.logo-link {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+}
+
+.admin-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 8px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-right: 4px;
+  font-size: 1rem;
+  line-height: 1.2;
+
+  .user-name {
+    font-weight: 500;
+  }
+
+  .user-role {
+    font-size: 0.875rem;
+    opacity: 0.8;
+  }
+}
+
+.app-content {
+  padding: 16px 20px 24px;
+  margin: 8px 16px 16px;
+  border-radius: 16px 16px 8px 8px;
+  background-color: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.active-link {
+  background-color: rgba(255, 255, 255, 0.16);
+}

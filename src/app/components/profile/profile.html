@@ -1,0 +1,126 @@
+<div class="profile-container">
+  <h2>User Profile</h2>
+  <p class="debug-banner">DEBUG: Profile template with appearance settings is loaded.</p>
+
+  <div *ngIf="currentRole() === 'Master'" class="role-warning master-warning">
+    WARNING: You are logged in as MASTER
+  </div>
+  <div *ngIf="currentRole() === 'Admin'" class="role-warning admin-warning">
+    WARNING: You are logged in as ADMIN
+  </div>
+  
+  <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="profile-form">
+    
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="Name" placeholder="Enter your name">
+        <mat-error *ngIf="profileForm.get('Name')?.hasError('required')">Name is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Surname</mat-label>
+        <input matInput formControlName="Surname" placeholder="Enter your surname">
+        <mat-error *ngIf="profileForm.get('Surname')?.hasError('required')">Surname is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="Email" placeholder="Enter your email" type="email">
+      <mat-error *ngIf="profileForm.get('Email')?.hasError('required')">Email is required</mat-error>
+      <mat-error *ngIf="profileForm.get('Email')?.hasError('email')">Please enter a valid email</mat-error>
+    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Height (cm)</mat-label>
+        <input matInput formControlName="Height" type="number" placeholder="Height in cm">
+        <mat-error *ngIf="profileForm.get('Height')?.hasError('required')">Height is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Date of Birth</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="DateOfBirth">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="profileForm.get('DateOfBirth')?.hasError('required')">Date of Birth is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Sex</mat-label>
+        <mat-select formControlName="Sex">
+          <mat-option value="Male">Male</mat-option>
+          <mat-option value="Female">Female</mat-option>
+        </mat-select>
+        <mat-error *ngIf="profileForm.get('Sex')?.hasError('required')">Sex is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Activity Level</mat-label>
+        <mat-select formControlName="Activity">
+          <mat-option *ngFor="let level of activityLevels" [value]="level.value">
+            {{ level.label }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="profileForm.get('Activity')?.hasError('required')">Activity level is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>User Role</mat-label>
+        <mat-select formControlName="role_id">
+          <mat-option *ngFor="let type of userTypes()" [value]="type.ID">
+            {{ type.Type }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="profileForm.get('role_id')?.hasError('required')">User Role is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <h3>Appearance</h3>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Colour Scheme</mat-label>
+        <mat-select formControlName="ColorScheme">
+          <mat-option value="default">Default</mat-option>
+          <mat-option value="cool">Cool Blue</mat-option>
+          <mat-option value="warm">Warm Sunset</mat-option>
+          <mat-option value="dark">Dark</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Font Family</mat-label>
+        <mat-select formControlName="FontFamily">
+          <mat-option value="system">System</mat-option>
+          <mat-option value="roboto">Roboto</mat-option>
+          <mat-option value="serif">Serif</mat-option>
+          <mat-option value="mono">Monospace</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Base Font Size (px)</mat-label>
+        <mat-select formControlName="FontSize">
+          <mat-option [value]="12">12</mat-option>
+          <mat-option [value]="14">14</mat-option>
+          <mat-option [value]="16">16</mat-option>
+          <mat-option [value]="18">18</mat-option>
+          <mat-option [value]="20">20</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="profileForm.invalid">Save Profile</button>
+    </div>
+
+  </form>
+</div>

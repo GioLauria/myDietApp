@@ -1,0 +1,79 @@
+<div class="food-db-container">
+  <div class="header-row">
+    <h2>Food Database</h2>
+    <button mat-raised-button color="primary" (click)="openFoodDialog()">
+      <mat-icon>add</mat-icon> Add Food
+    </button>
+  </div>
+
+  <div *ngIf="error()" class="error-message">
+    {{ error() }}
+  </div>
+
+  <div class="categories-section">
+    <div class="section-header">
+      <h3>Categories</h3>
+      <button mat-icon-button color="primary" (click)="addCategory()" title="Add Category">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+    </div>
+    <div class="categories-list">
+      <div 
+        *ngFor="let category of categories()" 
+        class="category-chip-wrapper"
+        [class.active]="selectedCategory()?.ID === category.ID"
+        (click)="selectCategory(category)">
+        
+        <span class="category-name">{{ category.Category }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-section">
+    <mat-form-field class="full-width">
+      <mat-label>Search Food</mat-label>
+      <input type="text" matInput [formControl]="searchControl">
+    </mat-form-field>
+  </div>
+
+  <div class="foods-section" *ngIf="foods().length > 0">
+    <h3 *ngIf="selectedCategory()">Foods in {{ selectedCategory()?.Category }} ({{ foods().length }})</h3>
+    <h3 *ngIf="!selectedCategory()">Search Results ({{ foods().length }})</h3>
+    
+    <div class="foods-table-container">
+      <table class="foods-table">
+        <thead>
+          <tr>
+            <th>Food</th>
+            <th>Category</th>
+            <th>Protein (g)</th>
+            <th>Carbs (g)</th>
+            <th>Fat (g)</th>
+            <th>Calories</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let food of foods()">
+            <td>{{ food.Food }}</td>
+            <td>{{ food.FoodCategory?.Category || selectedCategory()?.Category || '-' }}</td>
+            <td>{{ food.Protein }}</td>
+            <td>{{ food.Carbs }}</td>
+            <td>{{ food.Fat }}</td>
+            <td>{{ food.Calories }}</td>
+            <td>
+              <div class="actions" *ngIf="canEdit(food)">
+                <button mat-icon-button color="primary" (click)="openFoodDialog(food)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteFood(food)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<div class="changelog-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon color="primary">history</mat-icon>
+        <span>My Diet App - Changelog</span>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p class="intro">
+        This page summarises recent functional and UX changes to the application.
+        For a full history, see the CHANGELOG.md file in the repository.
+      </p>
+
+      <section *ngFor="let entry of recentChanges" class="change-section">
+        <h3>{{ entry.title }}</h3>
+        <ul>
+          <li *ngFor="let line of entry.details">{{ line }}</li>
+        </ul>
+      </section>
+    </mat-card-content>
+  </mat-card>
+</div>

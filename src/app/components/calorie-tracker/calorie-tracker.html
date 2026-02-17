@@ -1,0 +1,32 @@
+<div class="tracker-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Add Meal</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form (ngSubmit)="addMeal()" class="meal-form">
+        <mat-form-field appearance="fill">
+          <mat-label>Meal Name</mat-label>
+          <input matInput [(ngModel)]="name" name="name" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Calories</mat-label>
+          <input matInput type="number" [(ngModel)]="calories" name="calories" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Type</mat-label>
+          <mat-select [(ngModel)]="type" name="type">
+            <mat-option value="Breakfast">Breakfast</mat-option>
+            <mat-option value="Lunch">Lunch</mat-option>
+            <mat-option value="Dinner">Dinner</mat-option>
+            <mat-option value="Snack">Snack</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="!name || !calories">Add Meal</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

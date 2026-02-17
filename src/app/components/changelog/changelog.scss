@@ -1,0 +1,32 @@
+.changelog-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.changelog-container mat-card {
+  border-radius: 12px;
+}
+
+.intro {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 16px;
+}
+
+.change-section {
+  margin-bottom: 16px;
+}
+
+.change-section h3 {
+  margin-bottom: 4px;
+}
+
+.change-section ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.change-section li {
+  font-size: 0.9rem;
+}

@@ -1,0 +1,363 @@
+.weight-log-container {
+	padding: 20px;
+	border-radius: 12px;
+	background: radial-gradient(circle at top left, rgba(102, 187, 106, 0.15), transparent 60%);
+
+		h2 {
+			margin-bottom: 16px;
+			color: var(--app-primary);
+		}
+
+	.error-message {
+		padding: 8px 12px;
+		margin-bottom: 16px;
+		background-color: #ffebee;
+		color: #c62828;
+		border-radius: 4px;
+		border: 1px solid #ef9a9a;
+		font-size: 0.9rem;
+	}
+
+	.log-form-card,
+	.stats-card,
+	.entries-card {
+		margin-bottom: 16px;
+	}
+
+	.log-form {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		align-items: center;
+
+		mat-form-field {
+			min-width: 160px;
+		}
+
+		.admin-action-icon {
+			font-size: 18px;
+			margin-right: 4px;
+		}
+
+		.admin-note {
+			font-size: 0.75rem;
+			color: #b71c1c;
+			margin-left: auto;
+		}
+	}
+
+	.stats-grid {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px;
+		margin-top: 8px;
+
+		.stat-item {
+			min-width: 140px;
+			padding: 8px 12px;
+			border-radius: 4px;
+			background-color: #f5f5f5;
+
+			.stat-label {
+				font-size: 0.8rem;
+				color: #616161;
+			}
+
+			.stat-value {
+				font-size: 1rem;
+				font-weight: 500;
+			}
+		}
+	}
+
+	.dial-grid {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 18px;
+		margin-top: 12px;
+		justify-content: space-between;
+	}
+
+	.dial {
+		flex: 1 1 170px;
+		max-width: 220px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 10px 12px 14px;
+		border-radius: 16px;
+		background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(241, 248, 255, 0.96));
+		box-shadow:
+			0 6px 14px rgba(0, 0, 0, 0.08),
+			0 0 0 1px rgba(0, 0, 0, 0.03);
+	}
+
+	.dial-header {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+	}
+
+	.dial-icon {
+		font-size: 20px;
+		width: 20px;
+		height: 20px;
+		color: var(--app-primary);
+	}
+
+	.dial-label {
+		font-size: 0.9rem;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: #37474f;
+	}
+
+	.gauge {
+		position: relative;
+		width: 140px;
+		height: 80px;
+		margin: 10px auto 6px;
+		overflow: hidden;
+	}
+
+	.gauge-arc {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		width: 140px;
+		height: 140px;
+		margin-left: -70px;
+		border-radius: 50%;
+		background:
+			/* neutral base ring */
+			radial-gradient(circle at 50% 55%, #fafafa 0, #e0e0e0 62%, transparent 63%),
+			/* default single-color scale; specific dials can override */
+			conic-gradient(from -90deg,
+				var(--gauge-color-low, #66bb6a) 0deg 180deg,
+				#e0e0e0 181deg 360deg
+			);
+		box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04);
+	}
+
+	/* Body-fat: segmented health ranges using BF% thresholds */
+	.dial--bodyfat .gauge-arc {
+		background:
+			/* neutral base ring */
+			radial-gradient(circle at 50% 55%, #fafafa 0, #e0e0e0 62%, transparent 63%),
+			/* 0–cut1  : risky low BF%               → yellow */
+			/* cut1–2  : healthy                     → light green */
+			/* cut2–3  : optimal                     → deep green */
+			/* cut3–max: not healthy high BF%        → red    */
+			conic-gradient(from -90deg,
+				#f9a825 0% var(--bf-stop-1, 10%),
+				#66bb6a var(--bf-stop-1, 10%) var(--bf-stop-2, 25%),
+				#2e7d32 var(--bf-stop-2, 25%) var(--bf-stop-3, 35%),
+				#b71c1c var(--bf-stop-3, 35%) 50%,
+				#e0e0e0 50% 100%
+			);
+	}
+
+	/* Fat-mass: segmented health ranges using BF%-based thresholds */
+	.dial--fat .gauge-arc {
+		background:
+			/* neutral base ring */
+			radial-gradient(circle at 50% 55%, #fafafa 0, #e0e0e0 62%, transparent 63%),
+			/* 0–cut1  : risky (low fat)            → yellow */
+			/* cut1–2  : healthy                     → light green */
+			/* cut2–3  : optimal                     → deep green */
+			/* cut3–max: not healthy (high fat)      → red    */
+			conic-gradient(from -90deg,
+				#f9a825 0% var(--fat-stop-1, 10%),
+				#66bb6a var(--fat-stop-1, 10%) var(--fat-stop-2, 25%),
+				#2e7d32 var(--fat-stop-2, 25%) var(--fat-stop-3, 35%),
+				#b71c1c var(--fat-stop-3, 35%) 50%,
+				#e0e0e0 50% 100%
+			);
+	}
+
+	/* Lean-mass: segmented health ranges using LBM% (100 - BF%) thresholds */
+	.dial--lean .gauge-arc {
+		background:
+			/* neutral base ring */
+			radial-gradient(circle at 50% 55%, #fafafa 0, #e0e0e0 62%, transparent 63%),
+			/* 0–cut1  : not healthy (low LBM)      → red   */
+			/* cut1–2  : healthy                     → green */
+			/* cut2–3  : optimal                     → deep green */
+			/* cut3–max: risky (very low fat)        → yellow*/
+			conic-gradient(from -90deg,
+				#b71c1c 0% var(--lean-stop-1, 20%),
+				#2e7d32 var(--lean-stop-1, 20%) var(--lean-stop-2, 30%),
+				#1b5e20 var(--lean-stop-2, 30%) var(--lean-stop-3, 40%),
+				#f9a825 var(--lean-stop-3, 40%) 50%,
+				#e0e0e0 50% 100%
+			);
+	}
+
+	.gauge-arc::after {
+		content: "";
+		position: absolute;
+		inset: 16px;
+		border-radius: 50%;
+		background:
+			repeating-conic-gradient(
+				from -90deg,
+				rgba(96, 125, 139, 0.6) 0deg 2deg,
+				transparent 2deg 10deg
+			);
+		mask-image: radial-gradient(farthest-side, transparent 68%, #000 70%);
+		opacity: 0.3;
+	}
+
+	.gauge-needle {
+		position: absolute;
+		left: 50%;
+		bottom: 0;
+		width: 4px;
+		height: 70px;
+		transform-origin: 50% 100%;
+		transform: rotate(var(--angle-deg, 90deg));
+		background: var(--needle-color, #f44336);
+		box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+		transition: transform 220ms ease-out;
+	}
+
+	.gauge-needle::after {
+		content: "";
+		position: absolute;
+		top: 4px;
+		left: 50%;
+		transform: translateX(-50%);
+		border-left: 6px solid transparent;
+		border-right: 6px solid transparent;
+		border-top: 10px solid var(--needle-color, #f44336);
+	}
+
+	.gauge-center {
+		position: absolute;
+		left: 50%;
+		bottom: -9px;
+		width: 18px;
+		height: 18px;
+		margin-left: -9px;
+		border-radius: 50%;
+		background: #212121;
+		box-shadow:
+			0 0 0 2px #fafafa,
+			0 2px 4px rgba(0, 0, 0, 0.4);
+	}
+
+	.gauge-scale {
+		margin-top: 4px;
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		font-size: 0.75rem;
+		color: rgba(55, 71, 79, 0.9);
+	}
+
+	.gauge-min,
+	.gauge-max {
+		min-width: 40px;
+	}
+
+	.dial-reading {
+		text-align: center;
+	}
+
+	.dial-value {
+		font-size: 1.25rem;
+		font-weight: 700;
+		color: #263238;
+	}
+
+	.dial-unit {
+		margin-left: 4px;
+		font-size: 0.8rem;
+		font-weight: 500;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+		color: rgba(55, 71, 79, 0.9);
+	}
+
+	/* Per-metric color accents */
+	.dial--weight {
+		--needle-color: #1e88e5;
+	}
+
+	.dial--bodyfat {
+		--needle-color: #d32f2f;
+	}
+
+	.dial--lean {
+		--needle-color: #388e3c;
+	}
+
+	.dial--fat {
+		--needle-color: #fb8c00;
+	}
+
+	/* Health-based coloring for all dials */
+	.dial--health-good {
+		--gauge-color-low: #2e7d32;
+		--gauge-color-medium: #66bb6a;
+		--gauge-color-high: #a5d6a7;
+	}
+
+	.dial--health-ok {
+		--gauge-color-low: #fdd835;
+		--gauge-color-medium: #ffb300;
+		--gauge-color-high: #f57f17;
+	}
+
+	.dial--health-bad {
+		--gauge-color-low: #ef9a9a;
+		--gauge-color-medium: #e53935;
+		--gauge-color-high: #b71c1c;
+	}
+
+	.entries-table {
+		width: 100%;
+
+		th {
+			background-color: #f5f5f5;
+			padding: 8px 10px;
+			font-weight: 500;
+		}
+
+		td {
+			padding: 6px 10px;
+			font-size: 0.9rem;
+		}
+
+		.inline-input {
+			width: 70px;
+			margin-right: 4px;
+		}
+
+		/* Lean mass: increase = green, decrease = red */
+		.lean-positive {
+			color: #2e7d32;
+			font-weight: 600;
+		}
+
+		.lean-negative {
+			color: #c62828;
+			font-weight: 600;
+		}
+
+		/* Fat mass: increase = red, decrease = green */
+		.fat-positive {
+			color: #c62828;
+			font-weight: 600;
+		}
+
+		.fat-negative {
+			color: #2e7d32;
+			font-weight: 600;
+		}
+	}
+}
+

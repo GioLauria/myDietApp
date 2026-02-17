@@ -1,0 +1,113 @@
+<div class="meal-plan-container">
+  <h2>Your Meal Plan</h2>
+
+  <mat-card class="meal-summary-card" *ngIf="currentWeekSummary() as summary">
+    <div class="meal-summary-grid">
+      <div class="dial">
+        <div class="dial-label">Current week</div>
+        <div class="dial-value">Week {{ summary.weekNumber }}</div>
+        <div class="dial-sub">From {{ summary.weekStart }}</div>
+      </div>
+      <div class="dial">
+        <div class="dial-label">Total kcal to achieve</div>
+        <div class="dial-value">
+          {{ summary.targetKcal != null ? (summary.targetKcal | number: '1.0-0') : '-' }}
+        </div>
+      </div>
+      <div class="dial">
+        <div class="dial-label">Proteins (g)</div>
+        <div class="dial-value">
+          {{ summary.protG != null ? (summary.protG | number: '1.0-0') : '-' }}
+        </div>
+      </div>
+      <div class="dial">
+        <div class="dial-label">Fats (g)</div>
+        <div class="dial-value">
+          {{ summary.fatG != null ? (summary.fatG | number: '1.0-0') : '-' }}
+        </div>
+      </div>
+      <div class="dial">
+        <div class="dial-label">Carbs (g)</div>
+        <div class="dial-value">
+          {{ summary.carbsG != null ? (summary.carbsG | number: '1.0-0') : '-' }}
+        </div>
+      </div>
+    </div>
+  </mat-card>
+
+  <div class="plan-actions">
+    <button mat-raised-button color="primary" (click)="generateRandomPlan()" [disabled]="generating()">
+      Generate random meal plan
+    </button>
+    <button
+      mat-stroked-button
+      color="accent"
+      (click)="saveCurrentPlan()"
+      [disabled]="!generatedPlan() || !generatedTotals() || saving()"
+    >
+      Save this meal plan
+    </button>
+    <span class="plan-status" *ngIf="generateError()">{{ generateError() }}</span>
+    <span class="plan-status" *ngIf="!generateError() && saveStatus()">{{ saveStatus() }}</span>
+  </div>
+
+  <mat-card class="generated-plan-card" *ngIf="generatedPlan() && generatedTotals()">
+    <h3>Generated plan</h3>
+    <table class="plan-table">
+      <thead>
+        <tr>
+          <th>Slot</th>
+          <th>Food</th>
+          <th>Grams</th>
+          <th>Protein (g)</th>
+          <th>Carbs (g)</th>
+          <th>Fat (g)</th>
+          <th>Kcal</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="groupedPlan() as groups">
+        <ng-container *ngFor="let group of groups">
+          <tr class="slot-group-row">
+            <td colspan="7">{{ group.slot }}</td>
+          </tr>
+          <tr *ngFor="let item of group.items">
+            <td></td>
+            <td class="food-name" (click)="openFoodDetails(item.food)">{{ item.food.Food }}</td>
+            <td>{{ item.grams | number: '1.0-0' }}</td>
+            <td>{{ item.protein | number: '1.0-0' }}</td>
+            <td>{{ item.carbs | number: '1.0-0' }}</td>
+            <td>{{ item.fat | number: '1.0-0' }}</td>
+            <td>{{ item.calories | number: '1.0-0' }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+      <tfoot>
+        <tr class="totals-row">
+          <td colspan="2">Totals</td>
+          <td></td>
+          <td>{{ generatedTotals()?.protein | number: '1.0-0' }}</td>
+          <td>{{ generatedTotals()?.carbs | number: '1.0-0' }}</td>
+          <td>{{ generatedTotals()?.fat | number: '1.0-0' }}</td>
+          <td>{{ generatedTotals()?.calories | number: '1.0-0' }}</td>
+        </tr>
+        <tr class="totals-row">
+          <td colspan="2">Error vs target</td>
+          <td></td>
+          <td [ngClass]="deltaClass(generatedTotals()?.proteinErrorPct)">
+            {{ formatDeltaPercent(generatedTotals()?.proteinErrorPct) }}
+          </td>
+          <td [ngClass]="deltaClass(generatedTotals()?.carbsErrorPct)">
+            {{ formatDeltaPercent(generatedTotals()?.carbsErrorPct) }}
+          </td>
+          <td [ngClass]="deltaClass(generatedTotals()?.fatErrorPct)">
+            {{ formatDeltaPercent(generatedTotals()?.fatErrorPct) }}
+          </td>
+          <td [ngClass]="deltaClass(generatedTotals()?.kcalErrorPct)">
+            {{ formatDeltaPercent(generatedTotals()?.kcalErrorPct) }}
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </mat-card>
+
+</div>

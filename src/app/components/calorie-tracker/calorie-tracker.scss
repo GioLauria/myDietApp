@@ -1,0 +1,19 @@
+.tracker-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 16px;
+  border-radius: 12px;
+  background: radial-gradient(circle at top right, rgba(255, 183, 77, 0.18), transparent 55%);
+}
+
+.meal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-top: 20px;
+}
+
+mat-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}

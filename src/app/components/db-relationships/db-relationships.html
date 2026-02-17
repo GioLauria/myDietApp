@@ -1,0 +1,187 @@
+<div class="relationships-container">
+  <h2>Database Relationships</h2>
+  <p class="subtitle">Overview of the main tables and how they are linked together.</p>
+
+  <mat-card class="schema-card">
+    <mat-card-content>
+      <div class="diagram-wrapper">
+        <svg viewBox="0 0 960 420" class="er-diagram" aria-label="Database relationships diagram">
+          <!-- Profile (hub) -->
+          <g class="table-box">
+            <rect x="80" y="60" width="220" height="150" class="box-body" />
+            <rect x="80" y="60" width="220" height="30" class="box-header" />
+            <text x="90" y="80" class="box-title">tblProfile</text>
+            <text x="95" y="110" class="box-field primary">- ID</text>
+            <text x="95" y="130" class="box-field">- Name</text>
+            <text x="95" y="150" class="box-field">- Email</text>
+            <text x="95" y="170" class="box-field">- Activity</text>
+          </g>
+
+          <!-- UserType -->
+          <g class="table-box">
+            <rect x="360" y="40" width="220" height="110" class="box-body" />
+            <rect x="360" y="40" width="220" height="30" class="box-header" />
+            <text x="370" y="60" class="box-title">tblUserType</text>
+            <text x="375" y="90" class="box-field primary">- ID</text>
+            <text x="375" y="110" class="box-field">- Type</text>
+          </g>
+
+          <!-- FoodCategories -->
+          <g class="table-box">
+            <rect x="360" y="200" width="240" height="130" class="box-body" />
+            <rect x="360" y="200" width="240" height="30" class="box-header" />
+            <text x="370" y="220" class="box-title">tblFoodCategories</text>
+            <text x="375" y="250" class="box-field primary">- ID</text>
+            <text x="375" y="270" class="box-field">- Category</text>
+            <text x="375" y="290" class="box-field">- created_by (FK)</text>
+          </g>
+
+          <!-- Food -->
+          <g class="table-box">
+            <rect x="660" y="60" width="220" height="170" class="box-body" />
+            <rect x="660" y="60" width="220" height="30" class="box-header" />
+            <text x="670" y="80" class="box-title">tblFood</text>
+            <text x="675" y="110" class="box-field primary">- ID</text>
+            <text x="675" y="130" class="box-field">- Food</text>
+            <text x="675" y="150" class="box-field">- Protein / Carbs / Fat</text>
+            <text x="675" y="170" class="box-field">- ID_Category (FK)</text>
+            <text x="675" y="190" class="box-field">- created_by (FK)</text>
+          </g>
+
+          <!-- Weight -->
+          <g class="table-box">
+            <rect x="660" y="260" width="220" height="130" class="box-body" />
+            <rect x="660" y="260" width="220" height="30" class="box-header" />
+            <text x="670" y="280" class="box-title">tblWeight</text>
+            <text x="675" y="310" class="box-field primary">- ID</text>
+            <text x="675" y="330" class="box-field">- EntryDate</text>
+            <text x="675" y="350" class="box-field">- Weight / BodyFat</text>
+          </g>
+
+          <!-- DietPhase -->
+          <g class="table-box">
+            <rect x="80" y="260" width="260" height="150" class="box-body" />
+            <rect x="80" y="260" width="260" height="30" class="box-header" />
+            <text x="90" y="280" class="box-title">tblDietPhase</text>
+            <text x="95" y="310" class="box-field primary">- ID</text>
+            <text x="95" y="330" class="box-field">- profile_id (FK)</text>
+            <text x="95" y="350" class="box-field">- PhaseKey</text>
+            <text x="95" y="370" class="box-field">- ProteinPerKgLean / FatPerKgBody</text>
+          </g>
+
+          <!-- Analytics -->
+          <g class="table-box">
+            <rect x="380" y="310" width="240" height="140" class="box-body" />
+            <rect x="380" y="310" width="240" height="30" class="box-header" />
+            <text x="390" y="330" class="box-title">tblAnalytics</text>
+            <text x="395" y="355" class="box-field primary">- ID</text>
+            <text x="395" y="375" class="box-field">- profile_id (FK)</text>
+            <text x="395" y="395" class="box-field">- WeekStart / WeekNumber</text>
+            <text x="395" y="415" class="box-field">- Workout / PhaseKey</text>
+          </g>
+          
+          <!-- MealSlot -->
+          <g class="table-box">
+            <rect x="700" y="235" width="220" height="120" class="box-body" />
+            <rect x="700" y="235" width="220" height="30" class="box-header" />
+            <text x="710" y="255" class="box-title">tblMealSlot</text>
+            <text x="715" y="280" class="box-field primary">- ID</text>
+            <text x="715" y="300" class="box-field">- Name</text>
+            <text x="715" y="320" class="box-field">- IsMain</text>
+          </g>
+
+          <!-- MealPlan -->
+          <g class="table-box">
+            <rect x="700" y="360" width="260" height="160" class="box-body" />
+            <rect x="700" y="360" width="260" height="30" class="box-header" />
+            <text x="710" y="380" class="box-title">tblMealPlan</text>
+            <text x="715" y="405" class="box-field primary">- ID</text>
+            <text x="715" y="425" class="box-field">- profile_id (FK)</text>
+            <text x="715" y="445" class="box-field">- PlanDate</text>
+            <text x="715" y="465" class="box-field">- AnalyticsID (FK)</text>
+            <text x="715" y="485" class="box-field">- SlotID (FK) / FoodID (FK)</text>
+          </g>
+
+          <!-- Connectors (Profile as hub) -->
+          <!-- Profile.role_id -> UserType.ID -->
+          <line x1="300" y1="105" x2="360" y2="95" class="connector" />
+          <line x1="360" y1="95" x2="360" y2="95" class="connector" />
+          <polygon points="355,91 365,95 355,99" class="connector-arrow" />
+          <text x="315" y="90" class="connector-label">role_id → ID</text>
+
+          <!-- FoodCategories.created_by -> Profile.ID -->
+          <line x1="360" y1="245" x2="300" y2="210" class="connector" />
+          <polygon points="305,206 295,210 305,214" class="connector-arrow" />
+          <text x="310" y="230" class="connector-label">created_by → ID</text>
+
+          <!-- Food.ID_Category -> FoodCategories.ID -->
+          <line x1="660" y1="155" x2="600" y2="255" class="connector" />
+          <polygon points="605,251 595,255 605,259" class="connector-arrow" />
+          <text x="610" y="210" class="connector-label">ID_Category → ID</text>
+
+          <!-- Food.created_by -> Profile.ID -->
+          <line x1="660" y1="185" x2="300" y2="135" class="connector" />
+          <polygon points="305,131 295,135 305,139" class="connector-arrow" />
+          <text x="470" y="150" class="connector-label">created_by → ID</text>
+
+          <!-- Weight.created_by -> Profile.ID -->
+          <line x1="660" y1="295" x2="300" y2="195" class="connector" />
+          <polygon points="305,191 295,195 305,199" class="connector-arrow" />
+          <text x="470" y="235" class="connector-label">created_by → ID</text>
+
+          <!-- DietPhase.profile_id -> Profile.ID -->
+          <line x1="340" y1="305" x2="300" y2="195" class="connector" />
+          <polygon points="305,191 295,195 305,199" class="connector-arrow" />
+          <text x="260" y="280" class="connector-label">profile_id → ID</text>
+
+          <!-- Analytics.profile_id -> Profile.ID -->
+          <line x1="380" y1="345" x2="300" y2="195" class="connector" />
+          <polygon points="305,191 295,195 305,199" class="connector-arrow" />
+          <text x="330" y="325" class="connector-label">profile_id → ID</text>
+
+          <!-- Analytics.PhaseKey -> DietPhase.PhaseKey -->
+          <line x1="380" y1="390" x2="340" y2="325" class="connector" />
+          <polygon points="345,321 335,325 345,329" class="connector-arrow" />
+          <text x="350" y="360" class="connector-label">PhaseKey → PhaseKey</text>
+          
+          <!-- MealPlan.profile_id -> Profile.ID -->
+          <line x1="700" y1="395" x2="300" y2="170" class="connector" />
+          <polygon points="305,166 295,170 305,174" class="connector-arrow" />
+          <text x="520" y="185" class="connector-label">profile_id → ID</text>
+
+          <!-- MealPlan.SlotID -> MealSlot.ID -->
+          <line x1="760" y1="360" x2="760" y2="355" class="connector" />
+          <line x1="760" y1="355" x2="760" y2="355" class="connector" />
+          <polygon points="755,351 765,355 755,359" class="connector-arrow" />
+          <text x="770" y="345" class="connector-label">SlotID → ID</text>
+
+          <!-- MealPlan.FoodID -> Food.ID -->
+          <line x1="700" y1="390" x2="660" y2="210" class="connector" />
+          <polygon points="665,206 655,210 665,214" class="connector-arrow" />
+          <text x="640" y="260" class="connector-label">FoodID → ID</text>
+
+          <!-- MealPlan.AnalyticsID -> Analytics.ID -->
+          <line x1="700" y1="415" x2="380" y2="355" class="connector" />
+          <polygon points="385,351 375,355 385,359" class="connector-arrow" />
+          <text x="485" y="345" class="connector-label">AnalyticsID → ID</text>
+        </svg>
+      </div>
+
+      <div class="interactive-layout">
+        <h3>Interactive tables (drag to rearrange)</h3>
+        <p class="interactive-hint">Drag the table cards below to explore relationships in any layout you like.</p>
+        <div class="tables-board">
+          <div class="table-card" *ngFor="let t of tables" cdkDrag cdkDragBoundary=".tables-board">
+            <div class="table-title">{{ t.name }}</div>
+            <div class="table-columns">
+              <div class="table-column" *ngFor="let c of t.columns">
+                <span class="col-name" [class.pk]="c.role === 'PK'" [class.fk]="c.role === 'FK'">{{ c.name }}</span>
+                <span class="col-type">{{ c.type }}<ng-container *ngIf="c.role"> · {{ c.role }}</ng-container></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
