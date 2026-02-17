@@ -1,5 +1,10 @@
 # My Diet App
 
+## Automated Change Policy
+
+- All changes applied to this project will include an update to this `README.md`.
+- Every such change will be committed with a GPG-signed commit and pushed to the remote `origin` branch.
+
 A formal and professional web application for managing dieting, calories, weight, and meal planning.
 
 ## Key Features
