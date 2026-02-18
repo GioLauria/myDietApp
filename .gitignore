@@ -45,5 +45,3 @@ Thumbs.db
 
 # Server folder ignores
 /server/node_modules
-/server/database.sqlite
-/server/temp_backup
