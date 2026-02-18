@@ -53,3 +53,4 @@ All notable changes to My Diet App are documented here.
 
 - Removed a set of standalone maintenance scripts from `scripts/` and `server/` that were not referenced by the application or by other project code; retained `start-all.bat` as the recommended local starter on Windows.
 - Updated `README.md` to remove references to the removed hook-install scripts and added guidance for local pre-push hook setup or relying on GitHub branch protection for signed commits.
+ - Removed nested `server/server` folder which contained legacy maintenance utilities; remaining server application files are in `server/`.

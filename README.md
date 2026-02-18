@@ -8,6 +8,8 @@
 Recent automated fixes:
 
 - 2026-02-18: Fixed compile errors in `src/app/components/meal-plan/meal-plan.ts` (restored missing signals/computed/ngOnInit) so the Angular build completes.
+ - 2026-02-18: Fixed compile errors in `src/app/components/meal-plan/meal-plan.ts` (restored missing signals/computed/ngOnInit) so the Angular build completes.
+ - 2026-02-18: Removed nested `server/server` folder as part of cleanup; backend files remain in `server/`.
 
 A formal and professional web application for managing dieting, calories, weight, and meal planning.
 
