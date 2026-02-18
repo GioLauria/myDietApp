@@ -57,9 +57,9 @@
           <tr *ngFor="let food of foods()">
             <td>{{ food.Food }}</td>
             <td>{{ food.FoodCategory?.Category || selectedCategory()?.Category || '-' }}</td>
-            <td>{{ food.Protein }}</td>
-            <td>{{ food.Carbs }}</td>
-            <td>{{ food.Fat }}</td>
+            <td [class.dominant-protein]="dominantMacros(food).includes('protein')">{{ food.Protein }}</td>
+            <td [class.dominant-carbs]="dominantMacros(food).includes('carbs')">{{ food.Carbs }}</td>
+            <td [class.dominant-fat]="dominantMacros(food).includes('fat')">{{ food.Fat }}</td>
             <td>{{ food.Calories }}</td>
             <td>
               <div class="actions" *ngIf="canEdit(food)">

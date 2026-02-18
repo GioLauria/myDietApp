@@ -135,6 +135,20 @@
         tr:hover {
           background-color: #f9f9f9;
         }
+
+        /* Highlight the dominant macro in yellow */
+        .dominant-protein {
+          background-color: #fff59d;
+          font-weight: 600;
+        }
+        .dominant-carbs {
+          background-color: #fff59d;
+          font-weight: 600;
+        }
+        .dominant-fat {
+          background-color: #fff59d;
+          font-weight: 600;
+        }
       }
     }
   }

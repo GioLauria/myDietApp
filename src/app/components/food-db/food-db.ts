@@ -228,4 +228,19 @@ export class FoodDb implements OnInit {
       this.error.set('Failed to load foods for this category.');
     }
   }
+
+  // Return list of dominant macro keys for highlighting (may be multiple on ties)
+  dominantMacros(food: Food): string[] {
+    if (!food) return [];
+    const p = Number(food.Protein) || 0;
+    const c = Number(food.Carbs) || 0;
+    const f = Number(food.Fat) || 0;
+    const max = Math.max(p, c, f);
+    if (max <= 0) return [];
+    const res: string[] = [];
+    if (p === max) res.push('protein');
+    if (c === max) res.push('carbs');
+    if (f === max) res.push('fat');
+    return res;
+  }
 }
