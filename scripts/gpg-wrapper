@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# Minimal GPG wrapper for Git (POSIX / Git Bash)
+# Forwards all arguments to gpg found on PATH.
+if ! command -v gpg >/dev/null 2>&1; then
+  echo "gpg not found in PATH. Install GPG or adjust PATH." >&2
+  exit 1
+fi
+exec gpg "$@"
