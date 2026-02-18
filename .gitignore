@@ -42,3 +42,8 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Server folder ignores
+/server/node_modules
+/server/database.sqlite
+/server/temp_backup
